@@ -24,8 +24,8 @@ void Level::handleInput(float dt)
 // Update game objects
 void Level::update(float dt)
 {
-	tileMapManager.update(dt);
 	player.update(dt);
+	tileMapManager.update(dt);
 }
 
 // Render level

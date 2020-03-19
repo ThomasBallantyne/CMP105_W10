@@ -11,20 +11,22 @@ public:
 	void handleInput(float dt);
 	void update(float dt) override;
 	void collisionResponse(GameObject collider);
+	void isOnGround(bool ground);
 	void jump();
 
 protected:
 	sf::Texture marioTexture;
 	Animation walk;
 	bool moving;
-	bool isOnGround;
+	bool onGround;
 	float speed;
 	float distance;
 	sf::Vector2f coord;
 	sf::Vector2f gravity;
 	sf::Vector2f position;
-	sf::Vector2f centerPos;
-	sf::Vector2f diffX;
-	sf::Vector2f diffY;
+	sf::Vector2f BcenterPos;
+	sf::Vector2f PcenterPos;
+	float diffX;
+	float diffY;
 };
 

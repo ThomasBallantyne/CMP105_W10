@@ -28,8 +28,8 @@ TileMapManager::TileMapManager()
 	map = {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 1, 2, 0, 0, 0, 0, 0,
-		0, 0, 0, 1, 3, 0, 0, 0, 0, 0,
 		1, 2, 3, 4, 6, 1, 2, 3, 0, 0,
 		4, 5, 6, 0, 0, 4, 5, 6, 0, 0
 	};
@@ -46,6 +46,7 @@ TileMapManager::~TileMapManager()
 
 void TileMapManager::update(float dt)
 {
+
 	for (int i = 0; i < (int)world->size(); i++)
 	{
 		if ((*world)[i].isCollider())

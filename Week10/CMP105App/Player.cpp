@@ -9,7 +9,7 @@ Player::Player()
 	walk.addFrame(sf::IntRect(30, 0, 15, 21));
 	walk.addFrame(sf::IntRect(45, 0, 15, 21));
 	walk.setFrameSpeed(0.1f);
-
+	onGround = false;
 	setPosition(25, 400);
 	speed = 100;
 	gravity = sf::Vector2f(0,100);
@@ -46,13 +46,12 @@ void Player::handleInput(float dt)
 		moving = false;
 	}
 
-	if (input->isKeyDown(sf::Keyboard::Space))
+	if (input->isKeyDown(sf::Keyboard::Space) && (onGround == true))
 	{
-		if (isOnGround == true)
-		{
-			velocity.y = -100;
-			isOnGround = false;
-		}
+		
+		velocity.y = -100;
+		onGround = false;
+		
 	}
 }
 
@@ -70,25 +69,42 @@ void Player::update(float dt)
 
 void Player::collisionResponse(GameObject collider)
 {
-	centerPos = (collider.getPosition() + (collider.getSize() / 2.f));
-	if ((centerPos.y - getPosition().y) < (centerPos.x - getPosition().x))
+	BcenterPos = (collider.getPosition() + (collider.getSize() / 2.f));
+	PcenterPos = (getPosition() + (getSize() / 2.f));
+
+	if (fabs(BcenterPos.y - PcenterPos.y) < fabs(BcenterPos.x - PcenterPos.x)) //y axis collision
 	{
-		velocity.y = 0;
-		setPosition(getPosition().x, (collider.getPosition().y));
+		if ((BcenterPos.y - PcenterPos.y) < (BcenterPos.x - PcenterPos.x))
+		{
+			std::cout << "top" << "\n";
+			velocity.y = 0;
+			setPosition(getPosition().x, (collider.getPosition().y - getSize().y));
+		}
+		else if ((PcenterPos.y - BcenterPos.y) < (PcenterPos.x - BcenterPos.x))
+		{
+			std::cout << "bot" << "\n";
+			velocity.y = 0;
+			setPosition(getPosition().x, collider.getPosition().y);
+		}
 	}
-	else if ((getPosition().y - centerPos.y) < (getPosition().x - centerPos.x))
-	{
-		velocity.y = 0;
-		setPosition(getPosition().x, collider.getPosition().y - getSize().y);
-	}
-	else if ((centerPos.y - getPosition().y) > (centerPos.x - getPosition().x))
-	{
-		velocity.x = 0;
-		setPosition((getPosition().x+getSize().x), collider.getPosition().y);
-	}
-	else if ((getPosition().y - centerPos.y) > (getPosition().x - centerPos.x))
-	{
-		velocity.x = 0;
-		setPosition(getPosition().x, collider.getPosition().y - getSize().y);
-	}
+	//else //x axis collision
+	//{
+	//	if ((BcenterPos.y - PcenterPos.y) > (BcenterPos.x - PcenterPos.x))
+	//	{
+	//		std::cout << "left" << "\n";
+	//		velocity.x = 0;
+	//		setPosition((getPosition().x + getSize().x), collider.getPosition().y);
+	//	}
+	//	else if ((PcenterPos.y - BcenterPos.y) > (PcenterPos.x - BcenterPos.x))
+	//	{
+	//		std::cout << "right" << "\n";
+	//		velocity.x = 0;
+	//		setPosition(getPosition().x, collider.getPosition().y - getSize().y);
+	//	}
+	//}
+}
+
+void Player::isOnGround(bool ground)
+{
+	onGround = ground;
 }
