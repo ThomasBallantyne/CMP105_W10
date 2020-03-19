@@ -6,7 +6,8 @@ Level::Level(sf::RenderWindow* hwnd, Input* in)
 	input = in;
 
 	// initialise game objects
-
+	player.setInput(input);
+	tileMapManager.setPlayer(&player);
 }
 
 Level::~Level()
@@ -17,20 +18,22 @@ Level::~Level()
 // handle user input
 void Level::handleInput(float dt)
 {
-
+	player.handleInput(dt);
 }
 
 // Update game objects
 void Level::update(float dt)
 {
-	
+	tileMapManager.update(dt);
+	player.update(dt);
 }
 
 // Render level
 void Level::render()
 {
 	beginDraw();
-
+	tileMapManager.render(window);
+	window->draw(player);
 	endDraw();
 }
 
