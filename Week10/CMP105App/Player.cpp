@@ -10,13 +10,16 @@ Player::Player()
 	walk.addFrame(sf::IntRect(45, 0, 15, 21));
 	walk.setFrameSpeed(0.1f);
 	onGround = false;
-	setPosition(25, 400);
+	setPosition(200, 400);
 	speed = 100;
 	gravity = sf::Vector2f(0,100);
 	moving = false;
 	setSize(sf::Vector2f(45, 63));
-	//setOrigin(sf::Vector2f(getSize() / 2.f));
 	setCollisionBox(0,0,45,63);
+	hitBox.setSize(sf::Vector2f(getCollisionBox().width, getCollisionBox().height));
+	hitBox.setFillColor(sf::Color::Transparent);
+	hitBox.setOutlineColor(sf::Color::Red);
+	hitBox.setOutlineThickness(1.f);
 	walk.reset();
 	setTextureRect(walk.getCurrentFrame());
 }
@@ -65,6 +68,7 @@ void Player::update(float dt)
 	position = velocity * dt + 0.5f * gravity * dt * dt;
 	velocity += gravity * dt;
 	move(position);
+	hitBox.setPosition(getCollisionBox().left, getCollisionBox().top);
 }
 
 void Player::collisionResponse(GameObject collider)
@@ -72,39 +76,44 @@ void Player::collisionResponse(GameObject collider)
 	BcenterPos = (collider.getPosition() + (collider.getSize() / 2.f));
 	PcenterPos = (getPosition() + (getSize() / 2.f));
 
-	if (fabs(BcenterPos.y - PcenterPos.y) < fabs(BcenterPos.x - PcenterPos.x)) //y axis collision
+	if (fabs(BcenterPos.y - PcenterPos.y) > fabs(BcenterPos.x - PcenterPos.x)) //y axis collision
 	{
-		if ((BcenterPos.y - PcenterPos.y) < (BcenterPos.x - PcenterPos.x))
+		if ((BcenterPos.y - PcenterPos.y) < 0)
 		{
 			std::cout << "top" << "\n";
 			velocity.y = 0;
-			setPosition(getPosition().x, (collider.getPosition().y - getSize().y));
+			setPosition(getPosition().x, collider.getPosition().y);
 		}
-		else if ((PcenterPos.y - BcenterPos.y) < (PcenterPos.x - BcenterPos.x))
+		else
 		{
 			std::cout << "bot" << "\n";
 			velocity.y = 0;
-			setPosition(getPosition().x, collider.getPosition().y);
+			setPosition(getPosition().x, collider.getPosition().y - getSize().y);
 		}
 	}
-	//else //x axis collision
-	//{
-	//	if ((BcenterPos.y - PcenterPos.y) > (BcenterPos.x - PcenterPos.x))
-	//	{
-	//		std::cout << "left" << "\n";
-	//		velocity.x = 0;
-	//		setPosition((getPosition().x + getSize().x), collider.getPosition().y);
-	//	}
-	//	else if ((PcenterPos.y - BcenterPos.y) > (PcenterPos.x - BcenterPos.x))
-	//	{
-	//		std::cout << "right" << "\n";
-	//		velocity.x = 0;
-	//		setPosition(getPosition().x, collider.getPosition().y - getSize().y);
-	//	}
-	//}
+	else //x axis collision
+	{
+		if (0 < (BcenterPos.x - PcenterPos.x))
+		{
+			std::cout << "left" << "\n";
+			velocity.x = 0;
+			setPosition(collider.getPosition().x - getSize().x -1, collider.getPosition().y);
+		}
+		else
+		{
+			std::cout << "right" << "\n";
+			velocity.x = 0;
+			setPosition(collider.getPosition().x+ collider.getSize().x + 1, collider.getPosition().y);
+		}
+	}
 }
 
 void Player::isOnGround(bool ground)
 {
 	onGround = ground;
+}
+
+void Player::render(sf::RenderWindow* window)
+{
+	window->draw(hitBox);
 }

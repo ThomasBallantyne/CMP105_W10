@@ -12,11 +12,12 @@ public:
 	void update(float dt) override;
 	void collisionResponse(GameObject collider);
 	void isOnGround(bool ground);
-	void jump();
+	void render(sf::RenderWindow* window);
 
 protected:
 	sf::Texture marioTexture;
 	Animation walk;
+	sf::RectangleShape hitBox;
 	bool moving;
 	bool onGround;
 	float speed;

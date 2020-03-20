@@ -20,4 +20,5 @@ protected:
 	std::vector<GameObject> tiles;
 	std::vector<int> map;
 	std::vector<GameObject>* world;
+	std::vector<sf::RectangleShape> hitboxes;
 };

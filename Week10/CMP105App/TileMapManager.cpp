@@ -28,9 +28,9 @@ TileMapManager::TileMapManager()
 	map = {
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0, 1, 2, 0, 0, 0, 0, 0,
-		1, 2, 3, 4, 6, 1, 2, 3, 0, 0,
+		0, 0, 0, 4, 6, 0, 0, 0, 0, 0,
+		1, 2, 3, 0, 0, 1, 2, 3, 0, 0,
 		4, 5, 6, 0, 0, 4, 5, 6, 0, 0
 	};
 
@@ -38,6 +38,19 @@ TileMapManager::TileMapManager()
 	tileMap.setPosition(sf::Vector2f(0, 408)); 
 	tileMap.buildLevel();
 	world = tileMap.getLevel();
+
+	for (int i = 0; i < (int)world->size(); i++)
+	{
+		if ((*world)[i].isCollider())
+		{
+			hitboxes.push_back(sf::RectangleShape());
+			hitboxes.back().setPosition((*world)[i].getPosition());
+			hitboxes.back().setSize(sf::Vector2f((*world)[i].getCollisionBox().width, (*world)[i].getCollisionBox().height));
+			hitboxes.back().setFillColor(sf::Color::Transparent);
+			hitboxes.back().setOutlineColor(sf::Color::Red);
+			hitboxes.back().setOutlineThickness(1.f);
+		}
+	}
 }
 
 TileMapManager::~TileMapManager()
@@ -62,4 +75,9 @@ void TileMapManager::update(float dt)
 void TileMapManager::render(sf::RenderWindow* window)
 {
 	tileMap.render(window);
+	
+	for (int i = 0; i < hitboxes.size()-1; i++)
+	{
+		window->draw(hitboxes[i]);
+	}
 }

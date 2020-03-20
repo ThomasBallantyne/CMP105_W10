@@ -34,6 +34,7 @@ void Level::render()
 	beginDraw();
 	tileMapManager.render(window);
 	window->draw(player);
+	player.render(window);
 	endDraw();
 }
 
